@@ -9,7 +9,7 @@ def DockerTag() {
 pipeline {
   agent { label 'master' }
     tools {
-      maven 'Maven'
+      maven 'maven'
       jdk 'JAVA_HOME'
     }
   options { 
@@ -28,7 +28,7 @@ pipeline {
     stage('Artifactory_Configuration') {
       steps {
         script {
-		  rtMaven.tool = 'Maven'
+		  rtMaven.tool = 'maven'
 		  rtMaven.resolver releaseRepo: 'libs-release', snapshotRepo: 'libs-snapshot', server: server
 		  buildInfo = Artifactory.newBuildInfo()
 		  rtMaven.deployer releaseRepo: 'libs-release-local', snapshotRepo: 'libs-snapshot', server: server
