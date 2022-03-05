@@ -10,7 +10,7 @@ pipeline {
   agent { label 'master' }
     tools {
       maven 'maven'
-      jdk 'JAVA_HOME'
+      jdk 'jdk'
     }
   options { 
     timestamps () 
