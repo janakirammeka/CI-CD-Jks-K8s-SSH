@@ -69,7 +69,7 @@ pipeline {
        steps{
        withCredentials([usernamePassword(credentialsId: 'docker', passwordVariable: 'docker_pass', usernameVariable: 'docker_user')]) {
        	  sh 'docker login -u ${docker_user} -p ${docker_pass}'
-          sh 'docker push dileep95/spring:${DOCKER_TAG}'
+          sh 'docker push ramjmeka/spring:${DOCKER_TAG}'
         }
       }
     }    	
@@ -80,12 +80,12 @@ pipeline {
                 sshagent(['k8s']) {	      
 		   sh "scp -o StrictHostKeyChecking=no services.yml changed-deploy.yml services.yml prithdileep@35.223.202.172:/home/prithdileep"
 		script{
-			sh "ssh prithdileep@35.223.202.172 kubectl delete all --all"
+			sh "ssh k8s@10.182.0.10 kubectl delete all --all"
 		try{
-		  sh "ssh prithdileep@35.223.202.172 kubectl create -f ."
+		  sh "ssh prithdileep@10.182.0.10 kubectl create -f ."
 		  }
 		catch(error){
-		sh "ssh prithdileep@35.223.202.172 kubectl apply -f ."
+		sh "ssh k8s@10.182.0.10 kubectl apply -f ."
             }
         }
     }
@@ -95,11 +95,10 @@ pipeline {
 post {
     always {
 sh 'echo "This will always run"'
-mail bcc: '', body: "<br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br>URL: ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "Success: Project name -> ${env.JOB_NAME}", to: "prithdileep@gmail.com";
+mail bcc: '', body: "<br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br>URL: ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "Success: Project name -> ${env.JOB_NAME}", to: "ram.jmeka@gmail.com";
     }
     failure {
-sh 'echo "This will run only if failed"'
-      mail bcc: '', body: "<br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br>URL: ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "ERROR: Project name -> ${env.JOB_NAME}", to: "prithdileep@gmail.com";
+sh 'echo "This will run only if failed"'      mail bcc: '', body: "<br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br>URL: ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "ERROR: Project name -> ${env.JOB_NAME}", to: "ram.jmeka@gmail.com";
     }
   }
 }
